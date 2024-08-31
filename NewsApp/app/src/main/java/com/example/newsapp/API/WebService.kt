@@ -1,23 +1,13 @@
 package com.example.newsapp.API
 
+import com.example.newsapp.Model.SourceResponse
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Query
 
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+interface WebService {
 
-object WebService {
+    @GET("v2/top-headlines/sources")
 
-    val logger:HttpLoggingInterceptor = HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
-    val okHttp = OkHttpClient.Builder().addInterceptor(logger)
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://newsapi.org/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .client(okHttp.build())
-        .build()
-
-
-    fun getRetrofitService():ApiManager{
-        return retrofit.create(ApiManager::class.java)
-    }
+    fun getNewsSources(@Query("apiKey") apiKey:String = "ca29e585238b4f6d8612912a8a607083"): Call<SourceResponse>
 }

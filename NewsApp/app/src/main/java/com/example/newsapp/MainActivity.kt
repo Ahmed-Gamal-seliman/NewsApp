@@ -3,7 +3,7 @@ package com.example.newsapp
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import com.example.newsapp.API.WebService
+import com.example.newsapp.API.ApiManager
 import com.example.newsapp.Model.SourceResponse
 import com.example.newsapp.Model.SourcesItem
 import com.example.newsapp.databinding.ActivityMainBinding
@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun sendRequestForSourcesAndGetResponse() {
-        WebService.getRetrofitService().getNewsSources().enqueue(object: Callback<SourceResponse> {
+        ApiManager.getRetrofitService().getNewsSources().enqueue(object: Callback<SourceResponse> {
             override fun onResponse(p0: Call<SourceResponse>, response: Response<SourceResponse>) {
                 if(response.isSuccessful)
                 {
