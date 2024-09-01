@@ -1,12 +1,17 @@
 package com.example.newsapp
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.example.newsapp.API.ApiManager
-import com.example.newsapp.Model.SourceResponse
-import com.example.newsapp.Model.SourcesItem
+import com.example.newsapp.ModelNewsContent.Article
+import com.example.newsapp.ModelNewsSource.SourceResponse
+import com.example.newsapp.ModelNewsSource.SourcesItem
 import com.example.newsapp.databinding.ActivityMainBinding
+import com.google.android.material.tabs.TabLayout
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -14,6 +19,8 @@ import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     lateinit var binding:ActivityMainBinding
+    lateinit var newsFragment:NewsFragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -23,12 +30,21 @@ class MainActivity : AppCompatActivity() {
 
         showProgressBar()
 
+        
+
         buttonTryAgainListener()
 
         sendRequestForSourcesAndGetResponse()
 
 
 
+    }
+
+    private fun pushFragment(fragment:Fragment) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container,fragment)
+            .commit()
     }
 
     private fun buttonTryAgainListener() {
@@ -56,8 +72,11 @@ class MainActivity : AppCompatActivity() {
                 {
                     clearProgressBar()
                     response.body()?.sources?.let {
-                        showTabs(it)
+                    showTabs(it)
+                    onTabsClickListener(it)
                     }
+
+
 
 
                 }
@@ -67,6 +86,76 @@ class MainActivity : AppCompatActivity() {
             override fun onFailure(p0: Call<SourceResponse>, error: Throwable) {
                 showError(error.message)
                 showButtonTryAgain()
+                clearProgressBar()
+            }
+        })
+    }
+
+    private fun onTabsClickListener(sources: List<SourcesItem?>) {
+        binding.tabLayout.setOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                showProgressBar()
+
+
+                tab?.position?.let {
+                    sources[tab.position]?.id?.let {
+                        sendNewsContentRequestAndGetResponse(it)
+                    }
+
+
+                }
+
+
+            }
+
+            override fun onTabUnselected(p0: TabLayout.Tab?) {
+
+            }
+
+            override fun onTabReselected(p0: TabLayout.Tab?) {
+
+            }
+        })
+    }
+
+    private fun clearFragment() {
+        binding.fragmentContainer.isVisible= false
+    }
+    private fun showFragment() {
+        binding.fragmentContainer.isVisible= true
+    }
+
+    private fun sendNewsContentRequestAndGetResponse(id: String) {
+        ApiManager.getRetrofitService().getNewsContent(id).enqueue(object: Callback<com.example.newsapp.ModelNewsContent.SourceResponse> {
+            override fun onResponse(
+                p0: Call<com.example.newsapp.ModelNewsContent.SourceResponse>,
+                response: Response<com.example.newsapp.ModelNewsContent.SourceResponse>
+            ) {
+
+                if(response.isSuccessful)
+                {
+                    Log.e("send news","called")
+                    clearProgressBar()
+
+
+                    newsFragment= NewsFragment()
+                    val bundle:Bundle= Bundle()
+                    bundle.putSerializable("articleList",response.body()?.articles)
+                    newsFragment.arguments =bundle
+
+                    pushFragment(newsFragment)
+
+
+
+                }
+
+            }
+
+            override fun onFailure(
+                p0: Call<com.example.newsapp.ModelNewsContent.SourceResponse>,
+                error: Throwable
+            ) {
+               showError(error.message)
                 clearProgressBar()
             }
         })
@@ -96,4 +185,6 @@ class MainActivity : AppCompatActivity() {
     private fun showProgressBar() {
         binding.progressBar.isVisible = true
     }
+
+
 }

@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("kotlin-android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -49,6 +51,7 @@ dependencies {
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.okhttp.v4110)
     implementation(libs.logging.interceptor.v4110)
+    implementation(libs.glide)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

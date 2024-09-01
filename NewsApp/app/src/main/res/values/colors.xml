@@ -3,4 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="green">#39A552</color>
+    <color name="lightBlack">#42505C</color>
+    <color name= "lowLightBlack">#79828B</color>
+
+    <color name="newsTitleColor">@color/lightBlack</color>
+    <color name="authorNameColor">@color/lowLightBlack</color>
 </resources>
