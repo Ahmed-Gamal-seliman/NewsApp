@@ -112,10 +112,17 @@ class MainActivity : AppCompatActivity() {
 
             }
 
-            override fun onTabReselected(p0: TabLayout.Tab?) {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                tab?.position?.let {
+                    sources[tab.position]?.id?.let {
+                        sendNewsContentRequestAndGetResponse(it)
+                    }
 
+
+                }
             }
         })
+        binding.tabLayout.getTabAt(0)?.select()
     }
 
     private fun clearFragment() {
