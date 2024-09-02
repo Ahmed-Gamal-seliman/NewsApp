@@ -24,9 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:textColor="@color/authorNameColor"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                style="@style/title_style"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imv_news"
                 tools:text="Ahmed gamal" />

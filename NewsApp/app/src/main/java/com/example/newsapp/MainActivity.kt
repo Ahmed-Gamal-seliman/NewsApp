@@ -1,13 +1,10 @@
 package com.example.newsapp
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.newsapp.API.ApiManager
-import com.example.newsapp.ModelNewsContent.Article
 import com.example.newsapp.ModelNewsSource.SourceResponse
 import com.example.newsapp.ModelNewsSource.SourcesItem
 import com.example.newsapp.databinding.ActivityMainBinding
@@ -40,7 +37,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun pushFragment(fragment:Fragment) {
+    private fun pushFragment(fragment: Fragment, id: String?) {
+
+        val bundle:Bundle = Bundle()
+        id?.let {
+            bundle.putString("soruceId", it)
+            fragment.arguments = bundle
+        }
+
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container,fragment)
@@ -94,15 +98,9 @@ class MainActivity : AppCompatActivity() {
     private fun onTabsClickListener(sources: List<SourcesItem?>) {
         binding.tabLayout.setOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) {
-                showProgressBar()
 
-
-                tab?.position?.let {
-                    sources[tab.position]?.id?.let {
-                        sendNewsContentRequestAndGetResponse(it)
-                    }
-
-
+                if (tab != null) {
+                    pushFragment(NewsFragment(),sources[tab.position]?.id)
                 }
 
 
@@ -113,60 +111,14 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                tab?.position?.let {
-                    sources[tab.position]?.id?.let {
-                        sendNewsContentRequestAndGetResponse(it)
-                    }
-
-
+                if (tab != null) {
+                    pushFragment(NewsFragment(),sources[tab.position]?.id)
                 }
             }
         })
         binding.tabLayout.getTabAt(0)?.select()
     }
 
-    private fun clearFragment() {
-        binding.fragmentContainer.isVisible= false
-    }
-    private fun showFragment() {
-        binding.fragmentContainer.isVisible= true
-    }
-
-    private fun sendNewsContentRequestAndGetResponse(id: String) {
-        ApiManager.getRetrofitService().getNewsContent(id).enqueue(object: Callback<com.example.newsapp.ModelNewsContent.SourceResponse> {
-            override fun onResponse(
-                p0: Call<com.example.newsapp.ModelNewsContent.SourceResponse>,
-                response: Response<com.example.newsapp.ModelNewsContent.SourceResponse>
-            ) {
-
-                if(response.isSuccessful)
-                {
-                    Log.e("send news","called")
-                    clearProgressBar()
-
-
-                    newsFragment= NewsFragment()
-                    val bundle:Bundle= Bundle()
-                    bundle.putSerializable("articleList",response.body()?.articles)
-                    newsFragment.arguments =bundle
-
-                    pushFragment(newsFragment)
-
-
-
-                }
-
-            }
-
-            override fun onFailure(
-                p0: Call<com.example.newsapp.ModelNewsContent.SourceResponse>,
-                error: Throwable
-            ) {
-               showError(error.message)
-                clearProgressBar()
-            }
-        })
-    }
 
     private fun showButtonTryAgain() {
         binding.btnTryAgain.isVisible=true

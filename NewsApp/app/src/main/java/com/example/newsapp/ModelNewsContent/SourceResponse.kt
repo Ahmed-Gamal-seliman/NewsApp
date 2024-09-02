@@ -11,7 +11,7 @@ data class SourceResponse(
 	val totalResults: Int? = null,
 
     @field:SerializedName("articles")
-	val articles: ArrayList<Article?>? = null,
+	val articles: List<Article?>? = null,
 
     @field:SerializedName("status")
 	val status: String? = null

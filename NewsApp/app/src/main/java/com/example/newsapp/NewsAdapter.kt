@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.newsapp.ModelNewsContent.Article
 import com.example.newsapp.databinding.NewsItemBinding
 
-class NewsAdapter(private val newsList:ArrayList<Article?>?):Adapter<NewsAdapter.NewsViewHolder>() {
+class NewsAdapter(private var newsList:List<Article?>?):Adapter<NewsAdapter.NewsViewHolder>() {
 
     var onItemClicked: ItemOnClickListener? =null
 
@@ -40,13 +40,21 @@ class NewsAdapter(private val newsList:ArrayList<Article?>?):Adapter<NewsAdapter
 
                 binding.root.setOnClickListener()
                 {
-                    onItemClicked?.onItemClick()
+                    article?.let {
+                        onItemClicked?.onItemClick(it)
+                    }
                 }
 
             }
     }
 
     fun interface ItemOnClickListener{
-        fun onItemClick()
+        fun onItemClick(article:Article)
+    }
+
+    fun changeData(articles:List<Article?>?)
+    {
+        newsList = articles
+        notifyDataSetChanged()
     }
 }

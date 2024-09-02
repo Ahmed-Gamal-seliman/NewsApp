@@ -1,11 +1,13 @@
 package com.example.newsapp.ModelNewsContent
 
+import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
 
-
-
+//@Parcelize
 data class Article(
 
     @field:SerializedName("publishedAt")
@@ -21,7 +23,7 @@ data class Article(
 	val description: String? = null,
 
     @field:SerializedName("source")
-	val source:  Source? = null,
+	val source:   /* @RawValue */Source? = null,
 
     @field:SerializedName("title")
 	val title: String? = null,
@@ -31,4 +33,4 @@ data class Article(
 
     @field:SerializedName("content")
 	val content: String? = null
-)
+)//:Parcelable
