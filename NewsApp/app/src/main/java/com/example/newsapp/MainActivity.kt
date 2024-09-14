@@ -27,70 +27,97 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.newsapp.ui.theme.NewsAppTheme
+import android.util.Log
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import com.example.newsapp.API.ApiManager
+import com.example.newsapp.API.Model.SourceResponse
+import com.example.newsapp.API.Model.SourcesItem
+import com.example.newsapp.ui.theme.NewsAppTheme
+import retrofit2.Call
+import retrofit2.Response
+import javax.security.auth.callback.Callback
 
-class MainActivity2 : ComponentActivity() {
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
-            NewsSourceTabs(mutableListOf(0,1,2,3,4,5,6))
-
-        }
-    }
-
-    @Composable
-    fun NewsSourceTabs(index:List<Int>) {
-        var selectedTab by remember {
-            mutableIntStateOf(0)
-        }
-
-        ScrollableTabRow(selectedTabIndex = selectedTab, indicator = {},
-            divider = {},
-            edgePadding = 0.dp,
-            modifier= Modifier.padding(5.dp)
-                .fillMaxWidth()) {
-            index.forEachIndexed { index, i ->
-                Tab(selected =  (selectedTab == index), onClick = {
-                    selectedTab = index
-                },
-                    modifier=
-                    if(selectedTab == index)  Modifier
-                        .padding(8.dp)
-                        .background(shape = CircleShape, color = Color.Green)
-                        .border(2.dp, color = Color.White, shape = CircleShape)
-
-
-
-                    else Modifier
-                        .padding(8.dp)
-                        .background(shape = CircleShape, color = Color.White)
-                        .border(2.dp, color = Color.Green, shape = CircleShape)
-
-
-
-                ) {
-                    if(selectedTab == index)
-                        Text(text = "Hello",color = Color.White,
-                            modifier= Modifier.padding(8.dp))
-                    else
-                        Text(text = "Hello",color = Color.Green,
-                            modifier= Modifier.padding(8.dp))
-                }
-            }
-
-
-
-
+            CallNewsSourcesTabsApi()
+            NewsSourceTabs(mutableListOf(0, 1, 2, 3, 4, 5, 6))
 
         }
     }
-
-    @Preview(showSystemUi = true)
-    @Composable
-    private fun NewsSourceTabsPreview() {
-        NewsSourceTabs(mutableListOf(0,1,2,3,4,5,6))
-    }
-
 }
 
+@Composable
+fun CallNewsSourcesTabsApi() {
+
+
+    LaunchedEffect(key1 = true) {
+
+        ApiManager.getNewsSources().getSources().enqueue(
+            object : retrofit2.Callback<SourceResponse> {
+                override fun onResponse(call: Call<SourceResponse>, response: Response<SourceResponse>) {
+
+
+
+                }
+
+                override fun onFailure(p0: Call<SourceResponse>, p1: Throwable) {
+
+                }
+            }
+        )
+    }
+
+
+@Composable
+fun NewsSourceTabs(index:List<Int>) {
+    var selectedTab by remember {
+        mutableIntStateOf(0)
+    }
+
+    ScrollableTabRow(selectedTabIndex = selectedTab, indicator = {},
+        divider = {},
+        edgePadding = 0.dp,
+        modifier= Modifier.padding(5.dp)
+            .fillMaxWidth()) {
+        index.forEachIndexed { index, i ->
+            Tab(selected =  (selectedTab == index), onClick = {
+                selectedTab = index
+            },
+                modifier=
+                if(selectedTab == index)  Modifier
+                    .padding(8.dp)
+                    .background(shape = CircleShape, color = Color.Green)
+                    .border(2.dp, color = Color.White, shape = CircleShape)
+
+
+
+                else Modifier
+                    .padding(8.dp)
+                    .background(shape = CircleShape, color = Color.White)
+                    .border(2.dp, color = Color.Green, shape = CircleShape)
+
+
+
+            ) {
+                if(selectedTab == index)
+                    Text(text = "Hello",color = Color.White,
+                        modifier= Modifier.padding(8.dp))
+                else
+                    Text(text = "Hello",color = Color.Green,
+                        modifier= Modifier.padding(8.dp))
+            }
+        }
+
+
+
+
+
+    }
+}
 
