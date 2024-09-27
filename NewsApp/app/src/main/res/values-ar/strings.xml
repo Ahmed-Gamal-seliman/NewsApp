@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="categories">الفئات</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="sports">الرياضة</string>
+    <string name="settings">الإعدادات</string>
+    <string name="politics">السياسة</string>
+    <string name="health">الصحه</string>
+    <string name="business">الأعمال</string>
+    <string name="enviroment">البيئة</string>
+    <string name="science">العلم</string>
+    <string name="pick_your_category_of_interest">اختر الفئة التي تهمك</string>
+    <string name="news_app">تطبيق الأخبار!</string>
+    <string name="language">اللغة</string>
+    <string name="choose_langauge">اختر اللغة</string>
+    <string name="news_app_toolBar">تطبيق الأخبار</string>
+    <string name="no_articles_found">لا يوجد مقالات</string>
+
+</resources>
